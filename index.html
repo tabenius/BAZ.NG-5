@@ -87,8 +87,23 @@ body.t-night .sel,body.t-red .sel{background:#000}
 .pre small{display:block;font:400 10px var(--mono);letter-spacing:.04em;color:var(--dim);text-transform:none;margin-top:3px}
 .pre.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 /* timer */
-.timer{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}
-.timer .remain{margin-left:auto;font:700 16px var(--mono);color:var(--accent)}
+.timer-h{display:flex;align-items:baseline;justify-content:space-between;margin-top:12px}
+.timer-h .remain{font:700 18px var(--mono);color:var(--accent)}
+.timer{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:6px}
+.timer .sw.mini{min-width:0;padding:0 4px;gap:5px}
+/* banner */
+.banner{position:sticky;top:calc(6px + env(safe-area-inset-top));z-index:30;display:none;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;
+  padding:10px 12px;border-radius:5px;background:var(--accent);color:#1a0800;font:700 12px var(--mono);box-shadow:0 4px 0 var(--shadow)}
+.banner.on{display:flex}
+.banner span{flex:1;min-width:150px}
+.banner button{appearance:none;border:1px solid #1a0800;background:#1a0800;color:var(--accent);border-radius:4px;height:30px;padding:0 10px;font:700 11px var(--mono);letter-spacing:.1em;cursor:pointer}
+.banner button.ghost{background:transparent;color:#1a0800}
+/* night log */
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 8px}
+.rate .sw{min-width:0;padding:0 4px}
+.log{font:400 11px/1.6 var(--mono);color:var(--dim);margin-top:6px}
+.log div{display:flex;justify-content:space-between;gap:8px;border-top:1px dashed var(--line);padding:3px 0}
+.log b{color:var(--ink);font-weight:400}
 textarea{width:100%;min-height:74px;background:#061653;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px;font:400 11px var(--mono);user-select:text;-webkit-user-select:text}
 body.t-night textarea,body.t-red textarea{background:#000}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--accent);color:#1a0800;font:700 12px var(--mono);padding:9px 14px;border-radius:4px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
@@ -104,6 +119,7 @@ body.t-night textarea,body.t-red textarea{background:#000}
 </head>
 <body class="t-cobalt">
 <div class="wrap">
+  <div class="banner" id="banner"><span id="bannerTxt"></span><button id="bannerOk">OK</button><button class="ghost" id="bannerNo">IGNORE</button></div>
 
   <div class="plate">
     <div class="brand">
@@ -122,9 +138,8 @@ body.t-night textarea,body.t-red textarea{background:#000}
       <span>COLOUR <b id="rColour">–</b></span>
       <span>PULSE <b id="rPulse">–</b></span>
     </div>
-    <div class="timer" id="timer">
-      <span class="lbl">Sleep</span>
-    </div>
+    <div class="timer-h"><span class="lbl">Sleep timer</span><span class="remain" id="remain"></span></div>
+    <div class="timer" id="timer"></div>
   </section>
 
   <section>
@@ -191,11 +206,20 @@ body.t-night textarea,body.t-red textarea{background:#000}
 
   <section>
     <div class="sec-h">Tonight <em>for iterating with Claude</em></div>
+    <div class="lbl">How was the last night?</div>
+    <div class="rate" id="rate">
+      <button class="sw mini" data-rate="3"><span class="led"></span>SLEPT</button>
+      <button class="sw mini" data-rate="2"><span class="led"></span>DRIFTY</button>
+      <button class="sw mini" data-rate="1"><span class="led"></span>WOKE</button>
+      <button class="sw mini" data-rate="0"><span class="led"></span>NOPE</button>
+    </div>
     <textarea id="noteTxt" placeholder="How was it? Too hissy, too boomy, fell asleep at 23:40, woke at 03…"></textarea>
     <div class="swrow" style="margin-top:8px">
       <button class="sw" id="copyPatch"><span class="led"></span>COPY PATCH</button>
+      <button class="sw" id="copyLink"><span class="led"></span>COPY LINK</button>
       <button class="sw" id="pasteBtn"><span class="led"></span>LOAD PATCH</button>
     </div>
+    <div class="log" id="log"></div>
     <textarea id="pasteTxt" placeholder="Paste a patch from Claude here, then LOAD PATCH" style="display:none"></textarea>
   </section>
 
@@ -215,9 +239,13 @@ body.t-night textarea,body.t-red textarea{background:#000}
     <div class="grid4" id="sysKnobs"></div>
     <p class="note" id="inferred"></p>
     <div class="swrow">
+      <button class="sw mini" id="backupFile"><span class="led"></span>SAVE BACKUP</button>
+      <button class="sw mini" id="restoreFile"><span class="led"></span>RESTORE</button>
       <button class="sw mini" id="exportAll"><span class="led"></span>COPY ALL DATA</button>
       <button class="sw mini" id="resetAll"><span class="led"></span>FACTORY RESET</button>
     </div>
+    <input type="file" id="restoreInput" accept="application/json,.json" style="display:none">
+    <p class="note" id="storeNote"></p>
   </section>
 
   <div class="foot">RAGBAZ · NG-5 · LOCAL-FIRST · NOTHING LEAVES THIS DEVICE</div>
@@ -242,7 +270,7 @@ body.t-night textarea,body.t-red textarea{background:#000}
    ============================================================ */
 const COLORS = ['white','pink','brown','blue','violet'];
 const SLOPE  = {white:0, pink:-3, brown:-6, blue:3, violet:6};   // dB/octave
-const FIXED  = Object.freeze({ schema:1, bufferSeconds:10, crossfade:0.5, bakeSeconds:120, colors:COLORS, slope:SLOPE });
+const FIXED  = Object.freeze({ schema:2, bufferSeconds:10, crossfade:0.5, bakeSeconds:120, colors:COLORS, slope:SLOPE });
 const STORE_KEY = 'ragbaz.ng5.v1';
 
 const ch = (on,level,tone,pan,breathe)=>({on,level,tone,pan,breathe});
@@ -290,8 +318,18 @@ function defaultState(){
     settings:{ timerMin:45, fadeMin:12, wakeLock:true },
     ui:{ theme:'cobalt', haptics:true, scope:true, knobSens:1 },
     note:'',
-    stats:{ sessions:0, minutes:0, bandMin:{delta:0,theta:0,alpha:0,beta:0}, presetMin:{} , last:null}
+    stats:{ sessions:0, minutes:0, bandMin:{delta:0,theta:0,alpha:0,beta:0}, presetMin:{} , last:null},
+    log:[]   // one entry per session: {t:ISO, preset, min, hz, rate:null|0..3, note}
   };
+}
+/* schema migrations: each step takes state of version n and returns n+1 */
+const MIGRATIONS = {
+  1: s=>{ s.log = s.log||[]; return s; },
+};
+function migrate(s){
+  let v=s.schema||1;
+  while(v<FIXED.schema){ if(MIGRATIONS[v]) s=MIGRATIONS[v](s); v++; }
+  s.schema=FIXED.schema; return s;
 }
 function deepMerge(base, over){
   if(typeof base!=='object'||base===null||Array.isArray(base)) return over===undefined?base:over;
@@ -300,7 +338,9 @@ function deepMerge(base, over){
   return out;
 }
 let S = defaultState();
-try{ const raw=localStorage.getItem(STORE_KEY); if(raw) S=deepMerge(defaultState(), JSON.parse(raw)); }catch(e){}
+function loadInto(obj){ return deepMerge(defaultState(), migrate(obj)); }
+try{ const raw=localStorage.getItem(STORE_KEY); if(raw) S=loadInto(JSON.parse(raw)); }catch(e){}
+const LOG_MAX=120;
 let saveT=null;
 function save(){ clearTimeout(saveT); saveT=setTimeout(()=>{ try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} },250); }
 
@@ -471,9 +511,44 @@ async function play(){
   rt.E.update(S.params,{hz:rt.hz},true);
   const now=rt.ctx.currentTime; rt.E.fade.gain.setValueAtTime(0,now); rt.E.fade.gain.linearRampToValueAtTime(1,now+4);
   rt.E.start(now);
+  rt.ctx.onstatechange=onCtxState;
   scheduleTimer();
-  S.stats.sessions++; S.stats.last=new Date().toISOString(); save();
-  wake(true); setPlayUI();
+  beginSession();
+  wake(true); setPlayUI(); persistStorage(); mediaSession();
+}
+function beginSession(){
+  rt.logged=0;
+  S.stats.sessions++; S.stats.last=new Date().toISOString();
+  rt.entry={t:S.stats.last, preset:S.preset, min:0, hz:rt.hz??S.params.pulse.hz, rate:null, note:''};
+  S.log.push(rt.entry); if(S.log.length>LOG_MAX) S.log.splice(0,S.log.length-LOG_MAX);
+  save(); renderLog();
+}
+/* ---------- durability ---------- */
+async function persistStorage(){
+  try{ if(navigator.storage?.persist && !(await navigator.storage.persisted())) await navigator.storage.persist(); }catch(e){}
+  renderStoreNote();
+}
+async function renderStoreNote(){
+  let p=null; try{ p=await navigator.storage?.persisted?.(); }catch(e){}
+  $('#storeNote').innerHTML = p? 'Storage: <b>persistent</b>. The browser will not evict your data.'
+    : 'Storage: best-effort. Install to home screen, or save a backup now and then.';
+}
+/* ---------- interruptions & lock screen ---------- */
+function onCtxState(){
+  if(!rt.ctx||rt.mode!=='live') return;
+  if(rt.playing && rt.ctx.state!=='running') banner('Audio was paused by the system.', 'RESUME', ()=>rt.ctx.resume());
+  else hideBanner();
+}
+function mediaSession(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({title:PRESETS[S.preset]?.name||'NG-5 patch',artist:'RAGBAZ NG-5',album:'night',
+      artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]});
+    navigator.mediaSession.setActionHandler('play',()=>{ if(rt.mode==='tape'){ $('#tape').play(); } else if(rt.ctx) rt.ctx.resume(); navigator.mediaSession.playbackState='playing'; });
+    navigator.mediaSession.setActionHandler('pause',()=>{ if(rt.mode==='tape'){ $('#tape').pause(); } else if(rt.ctx) rt.ctx.suspend(); navigator.mediaSession.playbackState='paused'; });
+    navigator.mediaSession.setActionHandler('stop',()=>stop());
+    navigator.mediaSession.playbackState=rt.playing?'playing':'none';
+  }catch(e){}
 }
 function stop(soft=true){
   if(!rt.playing) return;
@@ -481,7 +556,8 @@ function stop(soft=true){
   if(rt.E){ const E=rt.E, ctx=rt.ctx, now=ctx.currentTime;
     E.fade.gain.cancelScheduledValues(now); E.fade.gain.setValueAtTime(E.fade.gain.value,now);
     E.fade.gain.linearRampToValueAtTime(0,now+(soft?1.5:.05)); setTimeout(()=>{E.stop(); try{E.tail.disconnect();}catch(e){}},soft?1700:100); }
-  rt.E=null; rt.playing=false; rt.endAt=null; wake(false); setPlayUI(); save();
+  rt.E=null; rt.playing=false; rt.endAt=null; rt.entry=null; wake(false); setPlayUI(); hideBanner(); save(); renderLog();
+  if('mediaSession' in navigator) try{ navigator.mediaSession.playbackState='none'; }catch(e){}
 }
 function scheduleTimer(){
   const min=S.settings.timerMin; rt.endAt=min? performance.now()+min*60000 : null;
@@ -494,7 +570,8 @@ async function wake(on){
   try{ if(on&&S.settings.wakeLock&&navigator.wakeLock){ rt.wake=await navigator.wakeLock.request('screen'); }
        else if(!on&&rt.wake){ await rt.wake.release(); rt.wake=null; } }catch(e){}
 }
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&rt.playing) wake(true); });
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&rt.playing){ wake(true);
+  if(rt.mode==='live'&&rt.ctx&&rt.ctx.state!=='running') rt.ctx.resume().catch(()=>{}).finally(onCtxState); } });
 
 /* tick: drift, descent, timer, stats */
 setInterval(()=>{
@@ -511,6 +588,7 @@ setInterval(()=>{
   // stats, once per minute of play
   const played=Math.floor((performance.now()-rt.t0)/60000);
   if(played>rt.logged){ rt.logged=played; S.stats.minutes++; S.stats.bandMin[band(rt.hz||P.pulse.hz)]++;
+    if(rt.entry){ rt.entry.min=played; rt.entry.hz=+(rt.hz||P.pulse.hz).toFixed(1); renderLog(); }
     S.stats.presetMin[S.preset]=(S.stats.presetMin[S.preset]||0)+1; save(); renderInferred(); }
   renderReadout(); renderTimer();
 },1000);
@@ -543,9 +621,8 @@ async function bake(){
     stop(false);
     const tape=$('#tape'); if(tape.src) URL.revokeObjectURL(tape.src); tape.src=url; tape.volume=1;
     await tape.play();
-    rt.playing=true; rt.mode='tape'; rt.t0=performance.now(); rt.logged=0; rt.hz=hz;
-    S.stats.sessions++; save(); scheduleTimer(); wake(true); setPlayUI();
-    if('mediaSession' in navigator) try{ navigator.mediaSession.metadata=new MediaMetadata({title:PRESETS[S.preset]?.name||'NG-5 patch',artist:'RAGBAZ NG-5'}); }catch(e){}
+    rt.playing=true; rt.mode='tape'; rt.t0=performance.now(); rt.hz=hz;
+    beginSession(); scheduleTimer(); wake(true); setPlayUI(); persistStorage(); mediaSession();
     toast('Tape rolling. Survives screen lock.');
   }catch(e){ toast('Bake failed: '+e.message); }
   $('#bake').classList.remove('on');
@@ -640,7 +717,6 @@ function buildUI(){
   const tm=$('#timer');
   [15,30,45,60,90,0].forEach(m=>{ const b=document.createElement('button'); b.className='sw mini'; b.dataset.tm=m; b.innerHTML=`<span class="led"></span>${m||'∞'}`;
     b.onclick=()=>{ S.settings.timerMin=m; buzz(); scheduleTimer(); refreshSwitches(); save(); }; tm.appendChild(b); });
-  const rem=document.createElement('span'); rem.className='remain'; rem.id='remain'; tm.appendChild(rem);
   // play
   $('#play').onclick=()=>{ buzz(); rt.playing?stop():play(); };
   $('#bake').onclick=()=>bake();
@@ -649,13 +725,59 @@ function buildUI(){
   let lastTap=0; $('#dusk').addEventListener('click',()=>{ const n=Date.now(); if(n-lastTap<450) $('#dusk').classList.remove('on'); lastTap=n; });
   // notes & patches
   $('#noteTxt').value=S.note||''; $('#noteTxt').oninput=e=>{ S.note=e.target.value; save(); };
-  $('#copyPatch').onclick=()=>copy(JSON.stringify({ng5:1,preset:S.preset,note:S.note,timer:S.settings.timerMin,params:S.params}),'Patch copied. Paste it to Claude.');
+  $('#copyPatch').onclick=()=>copy(JSON.stringify({ng5:2,preset:S.preset,note:S.note,timer:S.settings.timerMin,
+    nights:S.log.slice(-5).map(e=>({t:e.t.slice(0,16),preset:e.preset,min:e.min,hz:e.hz,rate:e.rate})),params:S.params}),'Patch copied. Paste it to Claude.');
+  $('#copyLink').onclick=()=>copy(location.origin+location.pathname+'#p='+encPatch({preset:S.preset,params:S.params}),'Link copied');
   $('#pasteBtn').onclick=()=>{ const t=$('#pasteTxt');
     if(t.style.display==='none'){ t.style.display=''; t.focus(); return; }
-    try{ const j=JSON.parse(t.value.trim()); const p=j.params||j; S.params=deepMerge(baseParams(),p); S.preset=j.preset&&PRESETS[j.preset]?j.preset:'custom';
-      refreshAll(); applyAll(); t.value=''; t.style.display='none'; toast('Patch loaded'); }catch(e){ toast('That did not parse as a patch'); } };
+    const v=t.value.trim(); const m=v.match(/#p=([\w-]+)/);
+    try{ const j=m?decPatch(m[1]):JSON.parse(v); loadPatch(j); t.value=''; t.style.display='none'; }catch(e){ toast('That did not parse as a patch'); } };
+  // night rating: rates the most recent session (or creates a manual entry)
+  $('#rate').addEventListener('click',e=>{ const b=e.target.closest('[data-rate]'); if(!b) return;
+    let last=S.log.at(-1); if(!last){ last={t:new Date().toISOString(),preset:S.preset,min:0,hz:S.params.pulse.hz,rate:null,note:''}; S.log.push(last); }
+    last.rate=+b.dataset.rate; if(S.note) last.note=S.note; buzz(); save(); renderLog(); toast('Noted. Thank you.'); });
+  // backups
+  $('#backupFile').onclick=()=>{ try{
+    const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=`ng5-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000); toast('Backup saved'); }catch(e){ copy(JSON.stringify(S),'Copied instead of saved'); } };
+  $('#restoreFile').onclick=()=>$('#restoreInput').click();
+  $('#restoreInput').onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+    try{ const j=JSON.parse(await f.text()); if(!j.params) throw 0;
+      banner(`Restore backup from ${f.name}? This replaces everything.`,'RESTORE',()=>{ S=loadInto(j); save(); applyTheme(); refreshAll(); applyAll(); toast('Restored'); });
+    }catch(err){ toast('Not an NG-5 backup'); } e.target.value=''; };
   $('#exportAll').onclick=()=>copy(JSON.stringify(S,null,1),'All local data copied');
   let armed=0; $('#resetAll').onclick=()=>{ if(Date.now()-armed<2500){ S=defaultState(); save(); refreshAll(); applyTheme(); applyAll(); toast('Factory reset'); } else { armed=Date.now(); toast('Tap again to reset everything'); } };
+  $('#bannerNo').onclick=hideBanner;
+  $('#bannerOk').onclick=()=>{ const f=rt.bannerFn; hideBanner(); f&&f(); };
+}
+/* ---------- banner ---------- */
+function banner(txt,ok,fn){ $('#bannerTxt').textContent=txt; $('#bannerOk').textContent=ok; rt.bannerFn=fn; $('#banner').classList.add('on'); }
+function hideBanner(){ $('#banner').classList.remove('on'); rt.bannerFn=null; }
+/* ---------- patch links: #p=<base64url(JSON)> ---------- */
+function encPatch(o){ const b=new TextEncoder().encode(JSON.stringify(o)); let s=''; b.forEach(x=>s+=String.fromCharCode(x));
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function decPatch(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='=';
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(s),c=>c.charCodeAt(0)))); }
+function loadPatch(j){ const p=j.params||j; if(typeof p!=='object'||!p.ch) throw new Error('no params');
+  S.params=deepMerge(baseParams(),p); S.preset=j.preset&&PRESETS[j.preset]?j.preset:'custom';
+  refreshAll(); applyAll(); toast(j.name?`Loaded: ${j.name}`:'Patch loaded'); }
+function checkHash(){
+  const m=location.hash.match(/^#p=([\w-]+)/); if(!m) return;
+  try{ const j=decPatch(m[1]); history.replaceState(null,'',location.pathname+location.search);
+    banner(`Patch received${j.name?': '+j.name:''}${j.note?' · '+j.note:''}`,'LOAD',()=>loadPatch(j)); }
+  catch(e){ toast('That link held no readable patch'); }
+}
+window.addEventListener('hashchange',checkHash);
+/* ---------- night log ---------- */
+const RATE=['nope','woke','drifty','slept'];
+function renderLog(){
+  const el=$('#log'); if(!el) return;
+  const rows=S.log.slice(-7).reverse();
+  el.innerHTML=rows.length? rows.map(e=>{ const d=new Date(e.t);
+    return `<div><span>${d.toLocaleDateString(undefined,{weekday:'short',day:'numeric'})} ${d.toTimeString().slice(0,5)}</span><b>${PRESETS[e.preset]?.name||e.preset}</b><span>${e.min}′ · ${e.rate==null?'–':RATE[e.rate]}</span></div>`; }).join('')
+    : '';
+  const last=S.log.at(-1); document.querySelectorAll('[data-rate]').forEach(b=>b.classList.toggle('on',last&&last.rate===+b.dataset.rate));
 }
 async function copy(txt,msg){
   try{ await navigator.clipboard.writeText(txt); toast(msg); }
@@ -669,7 +791,7 @@ function refreshSwitches(){
   document.querySelectorAll('[data-sel]').forEach(s=>s.value=getP(s.dataset.sel));
 }
 function markPreset(){ document.querySelectorAll('[data-pre]').forEach(b=>b.classList.toggle('on',b.dataset.pre===S.preset)); }
-function refreshAll(){ document.querySelectorAll('.knob').forEach(k=>k._draw()); refreshSwitches(); markPreset(); renderReadout(); renderInferred(); $('#noteTxt').value=S.note||''; $('.scope').style.display=S.ui.scope?'':'none'; }
+function refreshAll(){ document.querySelectorAll('.knob').forEach(k=>k._draw()); refreshSwitches(); markPreset(); renderReadout(); renderInferred(); renderLog(); $('#noteTxt').value=S.note||''; $('.scope').style.display=S.ui.scope?'':'none'; }
 function applyTheme(){ document.body.className='t-'+S.ui.theme; document.querySelector('meta[name=theme-color]').content=THEMES[S.ui.theme].bg; refreshSwitches(); }
 function setPlayUI(){ $('#play').classList.toggle('on',rt.playing); $('#playTxt').textContent=rt.playing?'STOP':'PLAY'; $('#modeTag').textContent=rt.playing?rt.mode:'idle'; renderTimer(); }
 function renderReadout(){
@@ -717,8 +839,12 @@ function frame(){
   }
 }
 
-buildUI(); applyTheme(); refreshAll(); setPlayUI(); requestAnimationFrame(frame);
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+buildUI(); applyTheme(); refreshAll(); setPlayUI(); renderStoreNote(); checkHash(); requestAnimationFrame(frame);
+if('serviceWorker' in navigator){
+  const hadController=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadController&&!rt.playing) banner('A new NG-5 version is ready.','RELOAD',()=>location.reload()); });
+}
 </script>
 </body>
 </html>

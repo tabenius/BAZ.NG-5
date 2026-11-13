@@ -7,10 +7,13 @@ A local-first, mobile-first noise generator styled after 1970s synths and the TR
 - **Pulse**: binaural beat (headphones) and/or isochronic-style amplitude pulse; DESCENT steps α → δ, optionally skipping θ
 - Sleep timer with an exponential fade; DUSK blackout screen; wake lock
 - **BAKE TAPE**: renders a seamless 2-minute WAV loop that keeps playing with the screen locked
-- Patches as JSON (copy and paste them to iterate with Claude)
+- Patches as JSON or as links (`#p=…`), plus a night log with quick ratings, to iterate with Claude
+- Backup/restore to a file; persistent storage; offline via service worker
 - Data model: `fixed`, `params`, `meta` (drift, descent, breath), `settings`, `ui`, `themes`, `stats` → `inferred`, plus live-computed `derived`
 - All state lives in `localStorage` (`ragbaz.ng5.v1`). Nothing leaves the device.
 
-Install as a PWA by serving the folder over HTTPS (for example Cloudflare Pages). `sw.js` caches it for offline use.
+Live at **https://tabenius.github.io/baz.ng-5/** once Pages is on (Settings → Pages → Deploy from branch `main`, `/ (root)`). Open it on the phone and choose *Add to Home Screen*.
+
+Roadmap: see [TODO.md](TODO.md).
 
 Note: entrainment evidence is mixed. The masking noise and slow breathing are the sturdier parts.
