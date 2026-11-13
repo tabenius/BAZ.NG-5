@@ -12,7 +12,7 @@ A local-first, mobile-first noise generator styled after 1970s synths and the TR
 - Data model: `fixed`, `params`, `meta` (drift, descent, breath), `settings`, `ui`, `themes`, `stats` → `inferred`, plus live-computed `derived`
 - All state lives in `localStorage` (`ragbaz.ng5.v1`). Nothing leaves the device.
 
-Live at **https://tabenius.github.io/baz.ng-5/** once Pages is on (Settings → Pages → Deploy from branch `main`, `/ (root)`). Open it on the phone and choose *Add to Home Screen*.
+Live at **https://tabenius.github.io/BAZ.NG-5/** once Pages is on (Settings → Pages → Deploy from branch `main`, `/ (root)`). Open it on the phone and choose *Add to Home Screen*.
 
 Roadmap: see [TODO.md](TODO.md).
 
