@@ -1,5 +1,7 @@
 # NG-5 · RAGBAZ noise machine
 
+Model **Mimisbrunr**, after Mímir's well beneath the world tree.
+
 A local-first, mobile-first noise generator styled after 1970s synths and the TR-909 era: a cobalt panel with orange keys.
 
 - Five voices (white, pink, brown, blue, violet), each with level, tone (low-pass), pan and *breathe* (a slow amplitude swell)
