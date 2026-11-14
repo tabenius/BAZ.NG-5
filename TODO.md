@@ -8,8 +8,16 @@
 - [x] Night log: one entry per session (preset, minutes, final Hz) with a quick rating (slept/drifty/woke/nope); the last 5 nights go into COPY PATCH
 - [x] Sleep-timer chips in a 6-column grid
 
+## iPhone / iPad pass, done 2026-11-14
+- [x] `navigator.audioSession.type = "playback"` so the ring/silent switch doesn't mute live mode; silent `<audio>` fallback for older iOS
+- [x] Tape fade on iOS (`audio.volume` is ignored there): stepped, pre-scaled copies of the loop, swapped near-gaplessly between two `<audio>` elements at loop ends, driven by `timeupdate`/`ended` so it works with the screen locked
+- [x] Fixed: the tape loop crossfade was on the wrong end, which made a click at every 2-minute wrap
+- [x] Touch: double-tap reset through pointer events (dblclick is unreliable on touch), drag up or right, 16px inputs so iOS never zooms, no callout or overscroll
+- [x] Tablet: two-column layout from 980px, bigger knobs from 760px, three-column presets; keyboard shortcuts (space, D, B)
+- [x] 180px apple-touch-icon, app title, `webkitOfflineAudioContext` fallback, one-time iOS hint pointing to BAKE TAPE
+
 ## P1: next
-- [ ] Tape-mode fade on iOS (iOS ignores `audio.volume`): bake a separate fade-out tape and switch to it at timer end
+- [ ] Verify on real devices: live mode with the screen locked under `audioSession=playback` (iOS 17+); timeupdate cadence while locked
 - [ ] Encrypted sync (passphrase → key on device; ciphertext to a private repo or R2). Nothing readable leaves the device
 - [ ] Sensing stage 1: mic permission, `enumerateDevices` and `devicechange` (external mic detection), room noise floor → adaptive masking level. Features only, never raw audio
 - [ ] Breath-rate estimate from the mic → breath pacer follows, then leads, slower
