@@ -5,6 +5,7 @@ A local-first, mobile-first noise generator styled after 1970s synths and the TR
 - Five voices (white, pink, brown, blue, violet), each with level, tone (low-pass), pan and *breathe* (a slow amplitude swell)
 - **Alter**: X-MOD (one voice ring-modulates another), SPACE (convolution with a decaying burst of a chosen noise), DRIFT (random-walk on levels and tone), dark/bright tilt, breaths per minute
 - **Pulse**: binaural beat (headphones) and/or isochronic-style amplitude pulse; DESCENT steps α → δ, optionally skipping θ
+- Nine colour themes on a slider at the top, three of them for colour vision differences (red–green, blue–yellow, black & white)
 - Sleep timer with an exponential fade; DUSK blackout screen; wake lock
 - **BAKE TAPE**: renders a seamless 2-minute WAV loop that keeps playing with the screen locked
 - Patches as JSON or as links (`#p=…`), plus a night log with quick ratings, to iterate with Claude

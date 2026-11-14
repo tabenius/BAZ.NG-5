@@ -16,6 +16,12 @@
 - [x] Tablet: two-column layout from 980px, bigger knobs from 760px, three-column presets; keyboard shortcuts (space, D, B)
 - [x] 180px apple-touch-icon, app title, `webkitOfflineAudioContext` fallback, one-time iOS hint pointing to BAKE TAPE
 
+## Colours, done 2026-11-14
+- [x] Nine themes on a ◐ COLOURS slider with swatches at the top: Cobalt, Paper (light), Moss, Amber terminal, Night, Red night, plus three clear themes
+- [x] Clear · red–green safe (protan/deutan, Okabe–Ito voices), Clear · blue–yellow safe (tritan), Clear · black & white (achromatopsia/low vision)
+- [x] Colour is never the only cue in clear themes: ringed bright LEDs, hollow unlit ones, outlined active keys (inverted keys in black & white)
+- [x] All panel colours are CSS variables; checked with a Machado-2009 CVD simulation and WCAG contrast (clear themes ≥ 4.5:1)
+
 ## P1: next
 - [ ] Verify on real devices: live mode with the screen locked under `audioSession=playback` (iOS 17+); timeupdate cadence while locked
 - [ ] Encrypted sync (passphrase → key on device; ciphertext to a private repo or R2). Nothing readable leaves the device
