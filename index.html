@@ -9,10 +9,10 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="apple-mobile-web-app-title" content="NG-5">
+<meta name="apple-mobile-web-app-title" content="BAZ NG-5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
-<title>NG-5 · RAGBAZ noise machine</title>
+<title>BAZ NG-5 · RAGBAZ noise generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -221,7 +221,7 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
   <div class="plate">
     <div class="brand">
       <small>RAGBAZ</small>
-      <h1>NG<span>-</span>5</h1>
+      <h1>BAZ NG<span>-</span>5</h1>
       <div class="sub">NOISE GENERATOR · MODEL MÍMISBRUNR · 5 VOICES</div>
     </div>
     <button class="play" id="play" aria-label="Play or stop"><span class="led"></span><span id="playTxt">PLAY</span></button>
@@ -349,7 +349,7 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
   </div>
   </div>
 
-  <div class="foot">RAGBAZ · NG-5 · LOCAL-FIRST · NOTHING LEAVES THIS DEVICE</div>
+  <div class="foot">RAGBAZ · BAZ NG-5 · LOCAL-FIRST · NOTHING LEAVES THIS DEVICE</div>
 </div>
 
 <div id="dusk"><div class="breath" id="duskBreath"></div><div class="t" id="duskT">∞</div><div>TAP TWICE</div></div>
@@ -674,7 +674,7 @@ function onCtxState(){
 function mediaSession(){
   if(!('mediaSession' in navigator)) return;
   try{
-    navigator.mediaSession.metadata=new MediaMetadata({title:PRESETS[S.preset]?.name||'NG-5 patch',artist:'RAGBAZ NG-5',album:'night',
+    navigator.mediaSession.metadata=new MediaMetadata({title:PRESETS[S.preset]?.name||'BAZ NG-5 patch',artist:'RAGBAZ · BAZ NG-5',album:'night',
       artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]});
     navigator.mediaSession.setActionHandler('play',()=>{ if(rt.mode==='tape'){ curTape().play(); } else if(rt.ctx) rt.ctx.resume(); navigator.mediaSession.playbackState='playing'; });
     navigator.mediaSession.setActionHandler('pause',()=>{ if(rt.mode==='tape'){ curTape().pause(); } else if(rt.ctx) rt.ctx.suspend(); navigator.mediaSession.playbackState='paused'; });
@@ -928,7 +928,7 @@ function buildUI(){
   $('#restoreInput').onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
     try{ const j=JSON.parse(await f.text()); if(!j.params) throw 0;
       banner(`Restore backup from ${f.name}? This replaces everything.`,'RESTORE',()=>{ S=loadInto(j); save(); applyTheme(); refreshAll(); applyAll(); toast('Restored'); });
-    }catch(err){ toast('Not an NG-5 backup'); } e.target.value=''; };
+    }catch(err){ toast('Not a BAZ NG-5 backup'); } e.target.value=''; };
   $('#exportAll').onclick=()=>copy(JSON.stringify(S,null,1),'All local data copied');
   let armed=0; $('#resetAll').onclick=()=>{ if(Date.now()-armed<2500){ S=defaultState(); save(); refreshAll(); applyTheme(); applyAll(); toast('Factory reset'); } else { armed=Date.now(); toast('Tap again to reset everything'); } };
   $('#bannerNo').onclick=hideBanner;
@@ -1199,8 +1199,8 @@ document.addEventListener('keydown',e=>{
 buildUI(); buildLooks(); buildViews(); renderViews(); applyTheme(); refreshAll(); setPlayUI(); renderStoreNote(); checkHash(); requestAnimationFrame(frame);
 if('serviceWorker' in navigator){
   const hadController=!!navigator.serviceWorker.controller;
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadController&&!rt.playing) banner('A new NG-5 version is ready.','RELOAD',()=>location.reload()); });
+  navigator.serviceWorker.register('sw.js?page='+encodeURIComponent(location.pathname)).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadController&&!rt.playing) banner('A new BAZ NG-5 version is ready.','RELOAD',()=>location.reload()); });
 }
 </script>
 </body>

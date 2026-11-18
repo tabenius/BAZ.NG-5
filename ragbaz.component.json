@@ -3,8 +3,8 @@
   "schemaVersion": "0.2.0",
   "identity": {
     "id": "ragbaz.ng-5",
-    "name": "NG-5 MÍMISBRUNR",
-    "version": "0.6.0",
+    "name": "BAZ NG-5 MÍMISBRUNR",
+    "version": "0.7.0",
     "repository": "tabenius/BAZ.NG-5",
     "owner": "ragbaz",
     "lifecycle": "beta"
@@ -16,9 +16,9 @@
     "featured": {
       "order": 100,
       "status": "live · free",
-      "label": "ng-5 · mímisbrunr",
+      "label": "baz ng-5 · mímisbrunr",
       "title": "five-colour / noise *machine*",
-      "description": "NG-5, model MÍMISBRUNR, is a local-first noise instrument in the spirit of 1970s synths and the TR-909 era: white, pink, brown, blue and violet voices that ring-modulate and convolve each other, a slow breathing tide, and a delta-band pulse with a sleep timer that fades out. It installs as an app on phones and tablets, works offline, and nothing leaves the device. Nine colour themes include three for colour vision differences.",
+      "description": "BAZ NG-5, model MÍMISBRUNR, is a local-first noise instrument in the spirit of 1970s synths and the TR-909 era: white, pink, brown, blue and violet voices that ring-modulate and convolve each other, a slow breathing tide, and a delta-band pulse with a sleep timer that fades out. It installs as an app on phones and tablets, works offline, and nothing leaves the device. Nine colour themes include three for colour vision differences.",
       "tags": [
         "pwa · offline",
         "web audio",
@@ -37,8 +37,8 @@
       },
       "links": [
         {
-          "label": "open ng-5 →",
-          "href": "https://tabenius.github.io/BAZ.NG-5/"
+          "label": "open baz ng-5 →",
+          "href": "https://ragbaz.cc/synth/baz-ng-5-noise-generator"
         },
         {
           "label": "source on github →",
@@ -48,14 +48,14 @@
     },
     "catalog": {
       "slug": "ng-5",
-      "name": "NG-5 MÍMISBRUNR",
+      "name": "BAZ NG-5 MÍMISBRUNR",
       "tag": "live",
       "tagLabel": "live · free",
       "short": "A local-first noise machine for sleep: five noise colours, cross-modulation, convolution space and a delta-band pulse.",
-      "value": "NG-5 is a noise instrument in the spirit of 1970s synths and the TR-909 era. White, pink, brown, blue and violet voices ring-modulate and convolve each other over a slow breathing tide, with an optional delta-band pulse and a sleep timer that fades out. It installs as an app on phones and tablets, works offline, and keeps everything on the device. Nine colour themes include three for colour vision differences. Free and open source.",
+      "value": "BAZ NG-5 is a noise instrument in the spirit of 1970s synths and the TR-909 era. White, pink, brown, blue and violet voices ring-modulate and convolve each other over a slow breathing tide, with an optional delta-band pulse and a sleep timer that fades out. It installs as an app on phones and tablets, works offline, and keeps everything on the device. Nine colour themes include three for colour vision differences. Free and open source.",
       "repo": "BAZ.NG-5",
       "links": {
-        "site": "https://tabenius.github.io/BAZ.NG-5/",
+        "site": "https://ragbaz.cc/synth/baz-ng-5-noise-generator",
         "source": "https://github.com/tabenius/BAZ.NG-5"
       }
     }
