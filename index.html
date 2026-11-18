@@ -427,7 +427,7 @@ function defaultState(){
     schema:FIXED.schema, preset:'delta-drift',
     params:structuredClone(PRESETS['delta-drift'].p),
     settings:{ timerMin:45, fadeMin:12, wakeLock:true },
-    ui:{ theme:'cobalt', haptics:true, scope:true, knobSens:1, iosHint:false, view:'spec|breath', skin:'theme' },
+    ui:{ theme:'cobalt', haptics:true, scope:true, knobSens:1, iosHint:false, view:'osc|breath', skin:'lcd' },
     note:'',
     stats:{ sessions:0, minutes:0, bandMin:{delta:0,theta:0,alpha:0,beta:0}, presetMin:{} , last:null},
     log:[]   // one entry per session: {t:ISO, preset, min, hz, rate:null|0..3, note}
@@ -1083,7 +1083,7 @@ function buildViews(){
   const s=document.createElement('button'); s.className='sw mini skin'; s.id='skinBtn'; s.onclick=()=>cycleSkin(1); v.appendChild(s);
 }
 function renderViews(){
-  if(!VIEWS[S.ui.view]) S.ui.view='spec|breath'; if(!SKINS[S.ui.skin]) S.ui.skin='theme';
+  if(!VIEWS[S.ui.view]) S.ui.view='osc|breath'; if(!SKINS[S.ui.skin]) S.ui.skin='lcd';
   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('on',b.dataset.view===S.ui.view));
   $('#skinBtn').textContent='STYLE ▸ '+SKINS[S.ui.skin].label.toUpperCase();
 }
@@ -1165,7 +1165,7 @@ function frame(){
   if(!S.ui.scope||!w) return;
   const cs=getComputedStyle(document.body), v=n=>cs.getPropertyValue(n).trim();
   const th={acc:v('--accent'),acc2:v('--accent2'),ink:v('--ink'),line:v('--line'),well:v('--well')};
-  const sk=SKINS[S.ui.skin]||SKINS.theme, panes=(VIEWS[S.ui.view]||VIEWS['spec|breath']).panes;
+  const sk=SKINS[S.ui.skin]||SKINS.lcd, panes=(VIEWS[S.ui.view]||VIEWS['osc|breath']).panes;
   cx.clearRect(0,0,w,h);
   if(sk.bg){ cx.fillStyle=sk.bg; cx.fillRect(0,0,w,h); }
   const live=rt.playing&&rt.mode==='live'&&rt.an;
