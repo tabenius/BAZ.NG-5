@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1335A6">
+<meta name="theme-color" content="#313E68">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
@@ -18,8 +18,8 @@
 <style>
 /* Every colour on the panel comes from these variables; each theme overrides them. */
 :root{
-  --bg:#1335A6; --bg2:#0E2A8C; --panel:#0B2275; --line:#3159D4; --accent:#FF6A13; --accent2:#FFB37A;
-  --ink:#F6EBD3; --dim:#A9BBF0; --shadow:rgba(0,8,40,.55); --well:#061653;
+  --bg:#313E68; --bg2:#283358; --panel:#212B4A; --line:#506095; --accent:#FF6A13; --accent2:#FFB37A;
+  --ink:#F6EBD3; --dim:#B6BED8; --shadow:rgba(8,12,28,.55); --well:#131A2F;
   --led:#FF3B00; --led-off:#4a1500; --led-ring:transparent; --on-ring:transparent;
   --key:#E9DFC6; --key-ink:#141414; --key-edge:#000; --key-shadow:#7d735d;
   --cap:#E9DFC6; --cap-ink:#111; --track:rgba(0,0,0,.35); --play-ink:#1a0800; --play-shadow:#8a3200;
@@ -97,7 +97,10 @@ section{margin-top:14px;background:var(--panel);border-radius:6px;padding:10px 1
 .sec-h::after{content:"";flex:1;height:2px;background:var(--accent);opacity:.65}
 .sec-h em{font-style:normal;color:var(--dim);letter-spacing:.12em;font-weight:400;font-size:10px}
 /* scope */
-.scope{position:relative;height:118px;border-radius:4px;background:var(--well);border:1px solid var(--line);overflow:hidden}
+.scope{position:relative;height:150px;border-radius:4px;background:var(--well);border:1px solid var(--line);overflow:hidden;cursor:pointer}
+.views{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.views .sw.mini{min-width:0;padding:0 8px;gap:6px}
+.views .skin{margin-left:auto;border-color:var(--accent)}
 canvas{display:block;width:100%;height:100%}
 .readout{display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-top:7px;font:400 11px var(--mono);color:var(--dim)}
 .readout b{color:var(--accent2);font-weight:700}
@@ -170,11 +173,24 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
 .looks input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:5px;background:var(--accent);border:2px solid var(--key-edge);box-shadow:0 3px 0 var(--play-shadow)}
 .looks input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:5px;background:var(--accent);border:2px solid var(--key-edge)}
 .looks input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.swatches{display:grid;grid-template-columns:repeat(9,1fr);gap:5px}
-.swatches button{appearance:none;cursor:pointer;height:24px;border-radius:4px;border:1px solid var(--line);padding:0;position:relative;overflow:hidden}
-.swatches button i{position:absolute;right:0;bottom:0;width:45%;height:55%;border-top-left-radius:4px}
-.swatches button.on{outline:2px solid var(--ink);outline-offset:1px}
-.swatches button.clear::after{content:"◐";position:absolute;left:3px;top:1px;font-size:11px;line-height:1;color:#fff;mix-blend-mode:difference}
+/* theme swatches: ordinary themes on the left, the clear (colour-blind / high-contrast) group boxed on the right */
+.swatches{display:grid;grid-template-columns:1fr;gap:8px}
+.sw-grp{border:2px solid transparent;border-radius:7px;padding:6px}
+.sw-grp.clear{border:2px dashed var(--accent)}
+.grp-h{display:flex;align-items:center;gap:6px;min-height:22px;margin-bottom:6px;font:700 10.5px var(--mono);letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.sw-grp.clear .grp-h{color:var(--accent)}
+.grp-h svg{width:22px;height:22px;flex:none}
+.grp-b{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.sw-grp.clear .grp-b{grid-template-columns:repeat(3,1fr)}
+.swatches button{appearance:none;cursor:pointer;height:46px;border-radius:5px;border:1px solid var(--line);padding:0;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:700 10px var(--mono);letter-spacing:.06em}
+.swatches button i{position:absolute;left:0;right:0;bottom:0;height:7px}
+.swatches button svg{width:24px;height:24px;position:relative}
+.swatches button .nm{display:none;position:relative;line-height:1.1;text-align:center;padding:0 4px}
+.swatches button.on{outline:3px solid var(--ink);outline-offset:2px}
+.swatches button.on::before{content:"✓";position:absolute;left:5px;top:3px;font:700 14px var(--mono);color:inherit}
+@media (min-width:900px){ .swatches{grid-template-columns:2fr 1fr;gap:10px} }
+@media (min-width:620px){ .swatches button{height:64px} .swatches button .nm{display:block} .grp-h{font-size:11.5px} }
 .looks .note{margin-top:6px}
 .foot{text-align:center;font:400 10px var(--mono);letter-spacing:.24em;color:var(--dim);margin-top:18px}
 /* touch: inputs at 16px so iOS never zooms on focus */
@@ -184,7 +200,7 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
 @media (min-width:760px){
   .knob svg{width:62px;height:62px} .knob .lab{font-size:10.5px} .knob .val{font-size:11px}
   .row{grid-template-columns:96px repeat(4,1fr)}
-  .scope{height:150px}
+  .scope{height:200px}
 }
 @media (min-width:980px){
   .wrap{max-width:1180px;padding:18px 22px}
@@ -194,7 +210,7 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
   .play{width:120px;height:84px}
   .presets{grid-template-columns:repeat(3,1fr)}
 }
-@media (min-width:980px) and (orientation:landscape) and (max-height:900px){ section{margin-top:12px} .scope{height:120px} }
+@media (min-width:980px) and (orientation:landscape) and (max-height:900px){ section{margin-top:12px} .scope{height:170px} }
 @media (max-width:380px){ .row{grid-template-columns:64px repeat(4,1fr)} .knob svg{width:46px;height:46px} .brand h1{font-size:38px} }
 </style>
 </head>
@@ -214,7 +230,10 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
   <div class="looks" role="group" aria-label="Colours">
     <div class="looks-top"><span class="lbl">◐ Colours</span><span class="looks-name" id="lookName"></span></div>
     <input type="range" id="lookRange" min="0" max="8" step="1" aria-label="Colour theme" aria-valuetext="">
-    <div class="swatches" id="swatches"></div>
+    <div class="swatches" id="swatches">
+      <div class="sw-grp"><div class="grp-h">Themes</div><div class="grp-b" id="swNormal"></div></div>
+      <div class="sw-grp clear"><div class="grp-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7S18.5 19 12 19 1.5 12 1.5 12z" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="3.6" fill="currentColor"/></svg>Colour-blind · high contrast</div><div class="grp-b" id="swClear"></div></div>
+    </div>
     <p class="note" id="lookNote" hidden></p>
   </div>
 
@@ -222,7 +241,8 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
   <div class="col">
   <section>
     <div class="sec-h">Monitor <em id="modeTag">live</em></div>
-    <div class="scope"><canvas id="scope"></canvas></div>
+    <div class="scope" title="Tap to change the display style"><canvas id="scope"></canvas></div>
+    <div class="views" id="views" role="group" aria-label="Monitor view"></div>
     <div class="readout">
       <span>SLOPE <b id="rSlope">–</b></span>
       <span>COLOUR <b id="rColour">–</b></span>
@@ -246,7 +266,7 @@ textarea{width:100%;min-height:74px;background:var(--well);color:var(--ink);bord
       <button class="sw" id="bake"><span class="led"></span>BAKE TAPE</button>
       <button class="sw" id="dimBtn"><span class="led"></span>DUSK</button>
     </div>
-    <p class="note">Keys: <b>space</b> play/stop · <b>D</b> dusk · <b>B</b> bake. Knobs: drag up/right, double-tap to reset.<br><b>TAPE</b> renders a seamless 2-minute loop of the current sound and plays it as plain audio, which keeps going with the screen locked on most phones. <b>DUSK</b> blacks out the screen; tap twice to return.</p>
+    <p class="note">Keys: <b>space</b> play/stop · <b>D</b> dusk · <b>B</b> bake · <b>V</b> monitor view · <b>S</b> display style (or tap the monitor). Knobs: drag up/right, double-tap to reset.<br><b>TAPE</b> renders a seamless 2-minute loop of the current sound and plays it as plain audio, which keeps going with the screen locked on most phones. <b>DUSK</b> blacks out the screen; tap twice to return.</p>
   </section>
   </div>
   <div class="col">
@@ -389,17 +409,17 @@ const PRESETS = {
       p.space.on=false; p.drift.on=false; p.pulse.on=false; p.descent.on=false; p.tilt=-.3; return p;})() },
 };
 const THEMES = {   // order = slider order; the last three are the "clear" themes for colour vision differences
-  cobalt:  {bg:'#1335A6',accent:'#FF6A13',label:'Cobalt · orange'},
-  paper:   {bg:'#EFE6D2',accent:'#B23A08',label:'Paper (light)'},
-  moss:    {bg:'#183424',accent:'#FF7A1A',label:'Moss'},
-  amber:   {bg:'#120A00',accent:'#FFB000',label:'Amber terminal'},
-  night:   {bg:'#060B24',accent:'#D2510F',label:'Night'},
-  red:     {bg:'#000000',accent:'#8E1C00',label:'Red night'},
-  'cvd-rg':{bg:'#0A2550',accent:'#FFB000',label:'Clear · red–green safe',clear:true,
+  cobalt:  {bg:'#313E68',accent:'#FF6A13',ink:'#F6EBD3',short:'Cobalt',label:'Cobalt · orange'},
+  paper:   {bg:'#EFE6D2',accent:'#B23A08',ink:'#1E1A13',short:'Paper',label:'Paper (light)'},
+  moss:    {bg:'#183424',accent:'#FF7A1A',ink:'#EFE8D2',short:'Moss',label:'Moss'},
+  amber:   {bg:'#120A00',accent:'#FFB000',ink:'#FFD27A',short:'Amber',label:'Amber terminal'},
+  night:   {bg:'#060B24',accent:'#D2510F',ink:'#9D927C',short:'Night',label:'Night'},
+  red:     {bg:'#000000',accent:'#8E1C00',ink:'#A82A0A',short:'Red night',label:'Red night'},
+  'cvd-rg':{bg:'#0A2550',accent:'#FFB000',ink:'#FFFFFF',short:'Red–green',label:'Clear · red–green safe',clear:true,
             note:'For protanopia and deuteranopia (the most common kinds). Blue and yellow only; lit lights are ringed, active keys outlined.'},
-  'cvd-by':{bg:'#1A1A1A',accent:'#FF3D6E',label:'Clear · blue–yellow safe',clear:true,
+  'cvd-by':{bg:'#1A1A1A',accent:'#FF3D6E',ink:'#FFFFFF',short:'Blue–yellow',label:'Clear · blue–yellow safe',clear:true,
             note:'For tritanopia. Red and teal on neutral grey, no blue/yellow pairs; lit lights are ringed, active keys outlined.'},
-  mono:    {bg:'#000000',accent:'#FFFFFF',label:'Clear · black & white',clear:true,
+  mono:    {bg:'#000000',accent:'#FFFFFF',ink:'#FFFFFF',short:'Black & white',label:'Clear · black & white',clear:true,
             note:'For no colour vision or low vision. Pure black and white; active keys turn white.'}
 };
 function defaultState(){
@@ -407,7 +427,7 @@ function defaultState(){
     schema:FIXED.schema, preset:'delta-drift',
     params:structuredClone(PRESETS['delta-drift'].p),
     settings:{ timerMin:45, fadeMin:12, wakeLock:true },
-    ui:{ theme:'cobalt', haptics:true, scope:true, knobSens:1, iosHint:false },
+    ui:{ theme:'cobalt', haptics:true, scope:true, knobSens:1, iosHint:false, view:'spec|breath', skin:'theme' },
     note:'',
     stats:{ sessions:0, minutes:0, bandMin:{delta:0,theta:0,alpha:0,beta:0}, presetMin:{} , last:null},
     log:[]   // one entry per session: {t:ISO, preset, min, hz, rate:null|0..3, note}
@@ -953,7 +973,7 @@ function refreshSwitches(){
   document.querySelectorAll('[data-sel]').forEach(s=>s.value=getP(s.dataset.sel));
 }
 function markPreset(){ document.querySelectorAll('[data-pre]').forEach(b=>b.classList.toggle('on',b.dataset.pre===S.preset)); }
-function refreshAll(){ document.querySelectorAll('.knob').forEach(k=>k._draw()); refreshSwitches(); markPreset(); renderReadout(); renderInferred(); renderLog(); $('#noteTxt').value=S.note||''; $('.scope').style.display=S.ui.scope?'':'none'; }
+function refreshAll(){ document.querySelectorAll('.knob').forEach(k=>k._draw()); refreshSwitches(); renderViews(); markPreset(); renderReadout(); renderInferred(); renderLog(); $('#noteTxt').value=S.note||''; $('.scope').style.display=S.ui.scope?'':'none'; }
 const THEME_IDS=Object.keys(THEMES);
 function applyTheme(){
   if(!THEMES[S.ui.theme]) S.ui.theme='cobalt';
@@ -969,10 +989,11 @@ function setTheme(id){ if(!THEMES[id]||id===S.ui.theme) return; S.ui.theme=id; a
 function buildLooks(){
   const r=$('#lookRange'); r.max=THEME_IDS.length-1;
   r.addEventListener('input',()=>setTheme(THEME_IDS[+r.value]));
-  const sw=$('#swatches'); sw.style.gridTemplateColumns=`repeat(${THEME_IDS.length},1fr)`;
+  const eye=$('.sw-grp.clear .grp-h svg').outerHTML;
   THEME_IDS.forEach(id=>{ const T=THEMES[id], b=document.createElement('button');
-    b.dataset.look=id; b.title=T.label; b.setAttribute('aria-label',T.label); b.style.background=T.bg; if(T.clear) b.classList.add('clear');
-    b.innerHTML=`<i style="background:${T.accent}"></i>`; b.onclick=()=>setTheme(id); sw.appendChild(b); });
+    b.dataset.look=id; b.title=T.label; b.setAttribute('aria-label',T.label); b.style.background=T.bg; b.style.color=T.ink;
+    b.innerHTML=`<i style="background:${T.accent}"></i>${T.clear?eye:''}<span class="nm">${T.short}</span>`;
+    b.onclick=()=>setTheme(id); $(T.clear?'#swClear':'#swNormal').appendChild(b); });
 }
 function setPlayUI(){ $('#play').classList.toggle('on',rt.playing); $('#playTxt').textContent=rt.playing?'STOP':'PLAY'; $('#modeTag').textContent=rt.playing?rt.mode:'idle'; renderTimer(); }
 function renderReadout(){
@@ -984,40 +1005,186 @@ function fmtLeft(ms){ const s=Math.max(0,Math.round(ms/1000)); return Math.floor
 function renderTimer(){ const t=rt.playing&&rt.endAt?fmtLeft(rt.endAt-performance.now()):(rt.playing?'∞':''); $('#remain').textContent=t; $('#duskT').textContent=t||'·'; }
 function renderInferred(){ $('#inferred').innerHTML=inferred(); }
 
-/* ---------- scope ---------- */
+/* ---------- monitor ----------
+   ui.view picks the panes (one, or two side by side); ui.skin picks the display style.
+   'theme' follows the colour theme; the others imitate old hardware displays. Tap the monitor to cycle styles. */
+const VIEWS = {
+  'spec|breath':{label:'SPEC | BREATH', panes:['spec','breath']},
+  breath:       {label:'BREATH',        panes:['breath']},
+  spec:         {label:'SPECTRUM',      panes:['spec']},
+  'osc|breath': {label:'SCOPE | BREATH',panes:['osc','breath']},
+  'spec+osc':   {label:'SPEC + SCOPE',  panes:['spec+osc']},
+  gram:         {label:'WATERFALL',     panes:['gram']},
+  'gram|breath':{label:'WATERFALL | BREATH', panes:['gram','breath']},
+};
+const VIEW_IDS=Object.keys(VIEWS);
+// k: super-pixel size in CSS px, gap: dark seam between cells. col(x,y): colour of a lit cell at bin x, height y (0..1).
+// unlit: colour (or alpha of the lit colour) for dark cells. gram: colour stops for the waterfall, quiet → loud.
+const SKINS = {
+  theme:{label:'Theme', k:4, gap:1, grid:true},
+  earth:{label:'Earth', k:5, gap:1, grid:true, stops:['#1F5F8B','#4C8C4A','#B5482F'], peak:'#E8D9B0', breath:['#E8D9B0','#4C8C4A'], ink:'#E8D9B0',
+         gram:['#06101A','#1F5F8B','#4C8C4A','#D9A441','#B5482F']},
+  lcd:  {label:'LCD', k:6, gap:1, bg:'#9BA88A', col:()=>'#1E2A1A', unlit:'rgba(30,42,26,.10)', peak:'#1E2A1A', breath:['#56664C','#1E2A1A'], ink:'#1E2A1A',
+         gram:['#9BA88A','#1E2A1A']},
+  led:  {label:'LED', k:7, gap:2, bg:'#060606', col:(x,y)=>y<.6?'#2BE04A':y<.85?'#FFC21A':'#FF2A1A', unlit:.13, peak:'#FF6A4A', breath:['#B8FFC6','#2BE04A'], ink:'#2BE04A',
+         gram:['#060606','#0D5A1C','#2BE04A','#FFC21A','#FF2A1A']},
+  vfd:  {label:'VFD · old synth', k:5, gap:2, bg:'#03100E', col:()=>'#3FF5D2', unlit:'rgba(63,245,210,.07)', peak:'#D8FFF6', glow:true, breath:['#D8FFF6','#3FF5D2'], ink:'#3FF5D2',
+         gram:['#03100E','#0B5C50','#3FF5D2','#E6FFF9']},
+  atari:{label:'Atari 8-bit', k:10, gap:0, bg:'#000000', peak:'#FFFFFF', breath:['#FFFFFF','#C8641C'], ink:'#FFFFFF', steps:true,
+         band:['#B83A1E','#C8641C','#C8A01C','#6CB41C','#1CA05A','#1C78B4','#5A3CC8','#A03CA0'],
+         col(x,y){ return this.band[Math.min(7,Math.floor(y*8))]; },
+         gram:['#000000','#5A3CC8','#1C78B4','#1CA05A','#6CB41C','#C8A01C','#C8641C','#B83A1E']},
+  amiga:{label:'Amiga 500', k:4, gap:1, bg:'#0055AA', col:(x,y)=>y<.7?'#FFFFFF':'#FF8800', unlit:'rgba(0,0,0,.18)', peak:'#000022', breath:['#FFFFFF','#FF8800'], ink:'#FFFFFF',
+         gram:['#002244','#0055AA','#FFFFFF','#FF8800']},
+};
+const SKIN_IDS=Object.keys(SKINS);
+const hexRgb=h=>{ h=(h||'').trim().replace('#',''); if(h.length===3) h=[...h].map(c=>c+c).join('');
+  const n=parseInt(h.slice(0,6),16); return isNaN(n)?[0,0,0]:[n>>16&255,n>>8&255,n&255]; };
+function ramp(stops,steps,n=64){   // n css colours along the stops; steps=true snaps to the nearest stop (8-bit look)
+  const rgb=stops.map(hexRgb), out=[];
+  for(let i=0;i<n;i++){ const t=i/(n-1)*(rgb.length-1);
+    if(steps){ const c=rgb[Math.round(t)]; out.push(`rgb(${c})`); continue; }
+    const a=Math.floor(t), b=Math.min(rgb.length-1,a+1), f=t-a;
+    out.push(`rgb(${rgb[a].map((v,j)=>Math.round(v+(rgb[b][j]-v)*f))})`); }
+  return out;
+}
+/* radix-2 FFT with a Hamming window, for the waterfall (the analyser's own window is Blackman) */
+const FFT_N=2048, HAMM=new Float32Array(FFT_N), REV=new Uint32Array(FFT_N);
+for(let i=0;i<FFT_N;i++){ HAMM[i]=.54-.46*Math.cos(2*Math.PI*i/(FFT_N-1));
+  let r=0; for(let b=1,j=i;b<FFT_N;b<<=1,j>>=1) r=(r<<1)|(j&1); REV[i]=r; }
+const fre=new Float32Array(FFT_N), fim=new Float32Array(FFT_N), fdb=new Float32Array(FFT_N/2);
+function hammingDb(td){   // td: newest time-domain samples; returns dB per bin in fdb
+  const o=td.length-FFT_N;
+  for(let i=0;i<FFT_N;i++){ fre[REV[i]]=td[o+i]*HAMM[i]; fim[REV[i]]=0; }
+  for(let s=2;s<=FFT_N;s<<=1){ const h=s>>1, a=-2*Math.PI/s;
+    for(let k=0;k<h;k++){ const wr=Math.cos(a*k), wi=Math.sin(a*k);
+      for(let j=k;j<FFT_N;j+=s){ const l=j+h, tr=wr*fre[l]-wi*fim[l], ti=wr*fim[l]+wi*fre[l];
+        fre[l]=fre[j]-tr; fim[l]=fim[j]-ti; fre[j]+=tr; fim[j]+=ti; } } }
+  // same scale as AnalyserNode (|X|/N), less the Hamming/Blackman coherent-gain difference
+  for(let i=0;i<FFT_N/2;i++) fdb[i]=20*Math.log10(Math.hypot(fre[i],fim[i])/FFT_N+1e-12)-2.2;
+  return fdb;
+}
+const level=db=>Math.max(0,Math.min(1,(db+110)/80));
+const logF=t=>20*Math.pow(1000,t);                      // 0..1 → 20 Hz..20 kHz
+function binMax(d,f0,f1,hzPerBin){ const n=d.length;
+  let i0=Math.floor(f0/hzPerBin), i1=Math.max(i0+1,Math.floor(f1/hzPerBin)), m=-200;
+  for(let i=i0;i<i1&&i<n;i++) m=Math.max(m,d[i]); return m; }
+
+const mon={ last:performance.now(), pk:[], hold:[], gc:null, gKey:'', gAcc:0, lut:null, lutKey:'' };
+const GRAM_SECONDS=12;
 const cv=$('#scope'), cx=cv.getContext('2d');
+cv.addEventListener('click',()=>cycleSkin(1));
+function cycleSkin(d){ const i=SKIN_IDS.indexOf(S.ui.skin); S.ui.skin=SKIN_IDS[(i+d+SKIN_IDS.length)%SKIN_IDS.length]; buzz(); save(); renderViews(); toast('Display: '+SKINS[S.ui.skin].label); }
+function setView(id){ if(!VIEWS[id]) return; S.ui.view=id; buzz(); save(); renderViews(); }
+function buildViews(){
+  const v=$('#views');
+  VIEW_IDS.forEach(id=>{ const b=document.createElement('button'); b.className='sw mini'; b.dataset.view=id; b.innerHTML=`<span class="led"></span>${VIEWS[id].label}`;
+    b.onclick=()=>setView(id); v.appendChild(b); });
+  const s=document.createElement('button'); s.className='sw mini skin'; s.id='skinBtn'; s.onclick=()=>cycleSkin(1); v.appendChild(s);
+}
+function renderViews(){
+  if(!VIEWS[S.ui.view]) S.ui.view='spec|breath'; if(!SKINS[S.ui.skin]) S.ui.skin='theme';
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('on',b.dataset.view===S.ui.view));
+  $('#skinBtn').textContent='STYLE ▸ '+SKINS[S.ui.skin].label.toUpperCase();
+}
+
+function label(txt,x,y,ink,dpr,align='left'){ cx.font=`700 ${9.5*dpr}px "Space Mono",monospace`; cx.textAlign=align; cx.fillStyle=ink; cx.globalAlpha=.75; cx.fillText(txt,x,y); cx.globalAlpha=1; }
+function drawSpec(r,sk,th,data,dt,dpr){
+  const k=sk.k*dpr, g=sk.gap*dpr, cols=Math.max(8,Math.floor(r.w/k)), rows=Math.max(4,Math.floor(r.h/k));
+  const ox=r.x+(r.w-cols*k)/2, oy=r.y+r.h-rows*k;
+  if(mon.pk.length!==cols){ mon.pk=new Array(cols).fill(0); mon.hold=new Array(cols).fill(0); }
+  if(sk.grid){ cx.strokeStyle=th.line; cx.lineWidth=1; cx.globalAlpha=.5;
+    [100,1000,10000].forEach(f=>{ const x=r.x+Math.log(f/20)/Math.log(1000)*r.w; cx.beginPath(); cx.moveTo(x,r.y); cx.lineTo(x,r.y+r.h); cx.stroke(); }); cx.globalAlpha=1; }
+  const hz=data?rt.ctx.sampleRate/(2*data.length):1;
+  const col = sk.col? (x,y)=>sk.col(x,y) : sk.stops? (()=>{ const lut=ramp(sk.stops,false,cols); return x=>lut[Math.min(cols-1,Math.floor(x*cols))]; })() : ()=>th.acc;
+  for(let c=0;c<cols;c++){
+    const v=data? level(binMax(data,logF(c/cols),logF((c+1)/cols),hz)) : 0;
+    // peak hold: the top cell stays ~0.9 s, then falls
+    if(v>=mon.pk[c]){ mon.pk[c]=v; mon.hold[c]=.9; } else if(mon.hold[c]>0) mon.hold[c]-=dt; else mon.pk[c]=Math.max(v,mon.pk[c]-.5*dt);
+    const lit=Math.round(v*rows), x=ox+c*k, xf=(c+.5)/cols;
+    for(let rr=0;rr<rows;rr++){ const y=oy+(rows-1-rr)*k, yf=(rr+.5)/rows;
+      if(rr<lit){ cx.fillStyle=col(xf,yf); if(sk.glow){ cx.shadowColor=cx.fillStyle; cx.shadowBlur=5*dpr; } cx.fillRect(x,y,k-g,k-g); cx.shadowBlur=0; }
+      else if(sk.unlit!==undefined){ if(typeof sk.unlit==='number'){ cx.globalAlpha=sk.unlit; cx.fillStyle=col(xf,yf); } else cx.fillStyle=sk.unlit;
+        cx.fillRect(x,y,k-g,k-g); cx.globalAlpha=1; }
+    }
+    if(mon.pk[c]>.015){ const pr=Math.min(rows-1,Math.round(mon.pk[c]*rows)); cx.fillStyle=sk.peak||th.acc2; cx.fillRect(x,oy+(rows-1-pr)*k,k-g,k-g); }
+  }
+}
+function drawOsc(r,sk,th,td,overlay,dpr){
+  const ink=sk.ink||th.ink, mid=r.y+r.h/2;
+  if(!overlay){ cx.strokeStyle=th.line; cx.globalAlpha=.6; cx.lineWidth=1; cx.beginPath(); cx.moveTo(r.x,mid); cx.lineTo(r.x+r.w,mid); cx.stroke(); }
+  if(!td) return;
+  let s=0; for(let i=1;i<td.length/2;i++) if(td[i-1]<0&&td[i]>=0){ s=i; break; }   // rising zero-crossing trigger
+  const n=Math.min(1024,td.length-s);
+  cx.strokeStyle=ink; cx.globalAlpha=overlay?.55:1; cx.lineWidth=1.3*dpr; cx.beginPath();
+  for(let i=0;i<n;i++){ const x=r.x+i/n*r.w, y=mid-td[s+i]*r.h*.9; i?cx.lineTo(x,y):cx.moveTo(x,y); } cx.stroke(); cx.globalAlpha=1;
+}
+function drawBreath(r,sk,th,dpr){
+  const br=S.params.breath.bpm/60, a=performance.now()/1000*2*Math.PI*br, ph=(Math.sin(a)+1)/2;
+  const [hi,base]=sk.breath||[th.acc2,th.acc], ink=sk.ink||th.ink;
+  const ccx=r.x+r.w/2, ccy=r.y+r.h/2-6*dpr, rmax=Math.min(r.w,r.h-14*dpr)*.46, rad=rmax*(.32+.68*ph);
+  cx.strokeStyle=base; cx.globalAlpha=.35; cx.lineWidth=1.2*dpr; cx.setLineDash([3*dpr,4*dpr]);
+  cx.beginPath(); cx.arc(ccx,ccy,rmax,0,Math.PI*2); cx.stroke(); cx.setLineDash([]); cx.globalAlpha=1;
+  const gr=cx.createRadialGradient(ccx-rad*.35,ccy-rad*.4,rad*.05,ccx,ccy,rad);
+  gr.addColorStop(0,hi); gr.addColorStop(.6,base); gr.addColorStop(1,base);
+  cx.fillStyle=gr; cx.globalAlpha=.55+ph*.45; cx.beginPath(); cx.arc(ccx,ccy,rad,0,Math.PI*2); cx.fill(); cx.globalAlpha=1;
+  label((Math.cos(a)>0?'BREATHE IN':'BREATHE OUT')+' · '+S.params.breath.bpm.toFixed(1)+'/MIN', ccx, r.y+r.h-5*dpr, ink, dpr, 'center');
+  return ph;
+}
+function drawGram(r,sk,th,td,live,dt,dpr){
+  const k=sk.k*dpr, g=sk.gap*dpr, cols=Math.max(8,Math.floor(r.w/k)), rows=Math.max(4,Math.floor(r.h/k));
+  const ox=r.x+(r.w-cols*k)/2, oy=r.y+r.h-rows*k;
+  const lk=S.ui.skin+':'+S.ui.theme;
+  if(mon.lutKey!==lk){ mon.lut=ramp(sk.gram||[th.well,th.line,th.acc,th.acc2,th.ink],sk.steps); mon.lutKey=lk; mon.gKey=''; }
+  const key=cols+'x'+rows+':'+k+':'+lk;
+  if(mon.gKey!==key){ mon.gc=document.createElement('canvas'); mon.gc.width=cols*k; mon.gc.height=rows*k;
+    const c=mon.gc.getContext('2d'); c.fillStyle=mon.lut[0]; c.fillRect(0,0,cols*k,rows*k); mon.gKey=key; mon.gAcc=0; }
+  const gx=mon.gc.getContext('2d'), per=GRAM_SECONDS/cols;
+  if(live&&td){
+    mon.gAcc+=dt; let steps=Math.min(4,Math.floor(mon.gAcc/per)); mon.gAcc-=steps*per;
+    if(steps>0){ const d=hammingDb(td), hz=rt.ctx.sampleRate/FFT_N, W=cols*k;
+      for(let s=0;s<steps;s++){
+        gx.drawImage(mon.gc,-k,0);                                    // scroll one super-pixel left; newest column on the right
+        gx.fillStyle=mon.lut[0]; gx.fillRect(W-k,0,k,rows*k);
+        for(let rr=0;rr<rows;rr++){ const v=level(binMax(d,logF(rr/rows),logF((rr+1)/rows),hz));
+          gx.fillStyle=mon.lut[Math.round(v*63)]; gx.fillRect(W-k,(rows-1-rr)*k,k-g,k-g); } } }
+  }
+  cx.drawImage(mon.gc,ox,oy);
+  const ink=sk.ink||th.ink;
+  // axes: time runs left → right (newest at the right edge), frequency is logarithmic bottom → top
+  for(let t=2;t<GRAM_SECONDS;t+=2){ const x=ox+cols*k*(1-t/GRAM_SECONDS); cx.fillStyle=ink; cx.globalAlpha=.6; cx.fillRect(x,r.y+r.h-4*dpr,1*dpr,4*dpr); cx.globalAlpha=1;
+    if(t%4===0) label('−'+t+'s',x,r.y+r.h-6*dpr,ink,dpr,'center'); }
+  [100,1000,10000].forEach(f=>{ const y=oy+rows*k*(1-Math.log(f/20)/Math.log(1000)); label(f>=1000?f/1000+'k':f+'',r.x+3*dpr,y+3*dpr,ink,dpr); });
+}
 function frame(){
   requestAnimationFrame(frame);
-  const w=cv.clientWidth*devicePixelRatio, h=cv.clientHeight*devicePixelRatio;
+  const dpr=devicePixelRatio, w=cv.clientWidth*dpr, h=cv.clientHeight*dpr, now=performance.now(), dt=Math.min(.1,(now-mon.last)/1000); mon.last=now;
   if(cv.width!==w||cv.height!==h){ cv.width=w; cv.height=h; }
-  const cs=getComputedStyle(document.body), acc=cs.getPropertyValue('--accent').trim(), line=cs.getPropertyValue('--line').trim(), ink=cs.getPropertyValue('--ink').trim();
-  cx.clearRect(0,0,w,h);
-  cx.strokeStyle=line; cx.lineWidth=1; cx.globalAlpha=.6;
-  for(let i=1;i<6;i++){ const y=h*i/6; cx.beginPath(); cx.moveTo(0,y); cx.lineTo(w,y); cx.stroke(); }
-  [50,100,200,500,1000,2000,5000,10000].forEach(f=>{ const x=Math.log(f/20)/Math.log(1000)*w; cx.beginPath(); cx.moveTo(x,0); cx.lineTo(x,h); cx.stroke(); });
-  cx.globalAlpha=1;
-  // breath dot
-  const br=S.params.breath.bpm/60, ph=(Math.sin(performance.now()/1000*2*Math.PI*br)+1)/2;
+  const br=S.params.breath.bpm/60, ph=(Math.sin(now/1000*2*Math.PI*br)+1)/2;
   $('#duskBreath').style.transform=`scale(${1+ph*2.2})`;
-  if(rt.playing&&rt.mode==='live'&&rt.an&&S.ui.scope){
-    const n=rt.an.frequencyBinCount, d=new Float32Array(n); rt.an.getFloatFrequencyData(d);
-    const sr=rt.ctx.sampleRate, bars=72;
-    for(let b=0;b<bars;b++){
-      const f0=20*Math.pow(1000,b/bars), f1=20*Math.pow(1000,(b+1)/bars);
-      let i0=Math.floor(f0/sr*2*n), i1=Math.max(i0+1,Math.floor(f1/sr*2*n)), m=-200;
-      for(let i=i0;i<i1&&i<n;i++) m=Math.max(m,d[i]);
-      const v=Math.max(0,Math.min(1,(m+110)/80)), x=b/bars*w, bw=w/bars-2*devicePixelRatio;
-      cx.fillStyle=acc; cx.fillRect(x,h-v*h,bw,v*h);
-    }
-    const td=new Float32Array(1024); rt.an.getFloatTimeDomainData(td);
-    cx.strokeStyle=ink; cx.globalAlpha=.55; cx.lineWidth=1.2*devicePixelRatio; cx.beginPath();
-    for(let i=0;i<td.length;i++){ const x=i/td.length*w, y=h/2-td[i]*h*.9; i?cx.lineTo(x,y):cx.moveTo(x,y); } cx.stroke(); cx.globalAlpha=1;
-  } else {
-    // idle: draw a breathing orange circle
-    cx.fillStyle=acc; cx.globalAlpha=.25+ph*.5; cx.beginPath(); cx.arc(w/2,h/2,(10+ph*26)*devicePixelRatio,0,Math.PI*2); cx.fill(); cx.globalAlpha=1;
-    cx.fillStyle=ink; cx.font=`${11*devicePixelRatio}px "Space Mono",monospace`; cx.textAlign='center';
-    cx.fillText(rt.mode==='tape'&&rt.playing?'TAPE ROLLING':'breathe with the dot', w/2, h-10*devicePixelRatio);
-  }
+  if(!S.ui.scope||!w) return;
+  const cs=getComputedStyle(document.body), v=n=>cs.getPropertyValue(n).trim();
+  const th={acc:v('--accent'),acc2:v('--accent2'),ink:v('--ink'),line:v('--line'),well:v('--well')};
+  const sk=SKINS[S.ui.skin]||SKINS.theme, panes=(VIEWS[S.ui.view]||VIEWS['spec|breath']).panes;
+  cx.clearRect(0,0,w,h);
+  if(sk.bg){ cx.fillStyle=sk.bg; cx.fillRect(0,0,w,h); }
+  const live=rt.playing&&rt.mode==='live'&&rt.an;
+  let fd=null, td=null;
+  if(live){ fd=new Float32Array(rt.an.frequencyBinCount); rt.an.getFloatFrequencyData(fd); td=new Float32Array(rt.an.fftSize); rt.an.getFloatTimeDomainData(td); }
+  const gap=8*dpr, pw=(w-gap*(panes.length-1))/panes.length, pad=4*dpr;
+  panes.forEach((p,i)=>{
+    const r={x:i*(pw+gap)+pad, y:pad, w:pw-2*pad, h:h-2*pad};
+    if(i){ cx.fillStyle=th.line; cx.fillRect(i*(pw+gap)-gap/2-dpr/2,6*dpr,dpr,h-12*dpr); }
+    const ink=sk.ink||th.ink;
+    if(p==='breath'){ drawBreath(r,sk,th,dpr); return; }
+    if(p==='spec'||p==='spec+osc') drawSpec(r,sk,th,fd,dt,dpr);
+    if(p==='osc'||p==='spec+osc') drawOsc(r,sk,th,td,p==='spec+osc',dpr);
+    if(p==='gram') drawGram(r,sk,th,td,live,dt,dpr);
+    label({spec:'SPECTRUM','spec+osc':'SPECTRUM + SCOPE',osc:'SCOPE',gram:'WATERFALL · HAMMING '+FFT_N+' · '+GRAM_SECONDS+' S'}[p],r.x+3*dpr,r.y+10*dpr,ink,dpr);
+    if(!live){ cx.font=`700 ${11*dpr}px "Space Mono",monospace`; cx.textAlign='center'; cx.fillStyle=ink; cx.globalAlpha=.8;
+      cx.fillText(rt.mode==='tape'&&rt.playing?'TAPE ROLLING · NO LIVE ANALYSER':'PRESS PLAY',r.x+r.w/2,r.y+r.h/2); cx.globalAlpha=1; }
+  });
+  label('◑ '+sk.label.toUpperCase()+' · TAP',w-pad-3*dpr,pad+10*dpr,sk.ink||th.ink,dpr,'right');
 }
 
 document.addEventListener('keydown',e=>{
@@ -1026,8 +1193,10 @@ document.addEventListener('keydown',e=>{
   if(e.code==='Space'){ e.preventDefault(); buzz(); rt.playing?stop():play(); }
   else if(e.key==='d'||e.key==='D'){ $('#dusk').classList.toggle('on'); }
   else if(e.key==='b'||e.key==='B'){ bake(); }
+  else if(e.key==='v'||e.key==='V'){ setView(VIEW_IDS[(VIEW_IDS.indexOf(S.ui.view)+(e.shiftKey?VIEW_IDS.length-1:1))%VIEW_IDS.length]); }
+  else if(e.key==='s'||e.key==='S'){ cycleSkin(e.shiftKey?-1:1); }
 });
-buildUI(); buildLooks(); applyTheme(); refreshAll(); setPlayUI(); renderStoreNote(); checkHash(); requestAnimationFrame(frame);
+buildUI(); buildLooks(); buildViews(); renderViews(); applyTheme(); refreshAll(); setPlayUI(); renderStoreNote(); checkHash(); requestAnimationFrame(frame);
 if('serviceWorker' in navigator){
   const hadController=!!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js').catch(()=>{});
