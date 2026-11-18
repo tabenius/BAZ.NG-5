@@ -1197,7 +1197,8 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='s'||e.key==='S'){ cycleSkin(e.shiftKey?-1:1); }
 });
 buildUI(); buildLooks(); buildViews(); renderViews(); applyTheme(); refreshAll(); setPlayUI(); renderStoreNote(); checkHash(); requestAnimationFrame(frame);
-if('serviceWorker' in navigator){
+// The Tauri app ships these files inside the APK, so it needs no service worker.
+if('serviceWorker' in navigator && !window.__TAURI_INTERNALS__){
   const hadController=!!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js?page='+encodeURIComponent(location.pathname)).catch(()=>{});
   navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadController&&!rt.playing) banner('A new BAZ NG-5 version is ready.','RELOAD',()=>location.reload()); });

@@ -1,0 +1,6 @@
+{
+  "schema": "ragbaz.android-signing/1",
+  "packageName": "cc.ragbaz.ng5",
+  "certificateSha256": "ad922e99609e3dea537bb817d5b4b7995a75affa5910bbcadac3ca2ee7ac36d4",
+  "note": "BAZ NG-5 release identity for cc.ragbaz.ng5 (CN=BAZ NG-5 release, O=RAGBAZ). Not update-compatible with debug builds. scripts/sign-android-release.sh refuses any other key."
+}

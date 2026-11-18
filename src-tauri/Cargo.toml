@@ -1,0 +1,28 @@
+[package]
+name = "baz-ng-5"
+version = "0.7.0"
+description = "BAZ NG-5 · RAGBAZ noise generator"
+license = "GPL-3.0-or-later"
+edition = "2021"
+
+[lib]
+name = "baz_ng5_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.dev]
+debug = 0
+strip = "debuginfo"
+
+[profile.release]
+strip = true
+lto = true

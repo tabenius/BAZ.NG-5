@@ -1,0 +1,14 @@
+{
+  "name": "baz-ng-5",
+  "private": true,
+  "version": "0.7.0",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "tauri": "tauri",
+    "android:debug": "tauri android build --debug --apk --target aarch64 x86_64 --ci",
+    "android:release": "tauri android build --apk --target aarch64 x86_64 --ci"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.3"
+  }
+}
